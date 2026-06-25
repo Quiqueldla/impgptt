@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - IMPGPT</title>
+<title>Cadastro - IMPGPT</title>
 
 <style>
 :root{
     --green:#1de9b6;
-    --blue:#0a3d62;
     --dark:#05090c;
     --text:#e6f1f5;
     --muted:#8faab3;
@@ -38,6 +37,23 @@ body{
     text-align:center;
 }
 
+.senha-box{
+    position:relative;
+}
+
+.senha-box input{
+    padding-right:50px;
+}
+
+#toggleSenha{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#8faab3;
+    font-size:18px;
+}
 .logo{
     color:rgb(28,211,83);
     font-size:35px;
@@ -62,23 +78,11 @@ body{
     border-radius:12px;
     background:#071014;
     color:var(--text);
-}
-.senha-box{
-    position:relative;
+    font-size:15px;
 }
 
-.senha-box input{
-    padding-right:50px;
-}
-
-#toggleSenha{
-    position:absolute;
-    right:15px;
-    top:50%;
-    transform:translateY(-50%);
-    cursor:pointer;
-    color:#8faab3;
-    font-size:18px;
+.input-group input::placeholder{
+    color:var(--muted);
 }
 
 .login-btn{
@@ -94,6 +98,12 @@ body{
         rgb(1,94,1),
         rgb(28,211,83)
     );
+    color:#001;
+    transition:.3s;
+}
+
+.login-btn:hover{
+    transform:scale(1.03);
 }
 
 .forgot{
@@ -103,6 +113,7 @@ body{
 .forgot a{
     color:var(--green);
     text-decoration:none;
+    font-size:14px;
 }
 </style>
 </head>
@@ -114,12 +125,20 @@ body{
     <div class="logo">IMPGPT</div>
 
     <div class="subtitle">
-        Faça login para continuar
+        Faça o cadastro para continuar
     </div>
 
-    <form id="loginForm">
+    <form id="cadastroForm">
 
-              <div class="input-group">
+        <div class="input-group">
+            <input
+                type="text"
+                id="nome"
+                placeholder="Nome de utilizador"
+                required>
+        </div>
+
+        <div class="input-group">
            <input
     type="email"
     id="email"
@@ -128,7 +147,7 @@ body{
     required>
         </div>
 
-      <div class="input-group senha-box">
+       <div class="input-group senha-box">
     <input
         type="password"
         id="senha"
@@ -138,14 +157,12 @@ body{
     <span id="toggleSenha">👁️</span>
 </div>
 
-        <button class="login-btn" type="submit" >
-            Entrar
+        <button class="login-btn" type="submit">
+            Criar Conta
         </button>
 
-       
-
         <div class="forgot">
-            <a href="cadastro.html">Criar conta</a>
+            <a href="login.html">Já tenho uma conta</a>
         </div>
 
     </form>
@@ -153,28 +170,31 @@ body{
 </div>
 
 <script type="module">
+    const toggleSenha =
+document.getElementById("toggleSenha");
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+const senha =
+document.getElementById("senha");
 
-import {
-  getAuth,
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+toggleSenha.addEventListener("click", ()=>{
 
-const toggleSenha = document.getElementById("toggleSenha");
-const senha = document.getElementById("senha");
-
-toggleSenha.addEventListener("click", () => {
-
-    if (senha.type === "password") {
+    if(senha.type === "password"){
         senha.type = "text";
         toggleSenha.textContent = "🙈";
-    } else {
+    }else{
         senha.type = "password";
         toggleSenha.textContent = "👁️";
     }
 
 });
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAa-O6e2KrXBGzS-IrCKhnFOsyA9ER8sws",
@@ -189,53 +209,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-document.getElementById("loginForm")
-.addEventListener("submit", async (e) => {
+document.getElementById("cadastroForm")
+.addEventListener("submit", async (e)=>{
 
     e.preventDefault();
+
+    const nome =
+        document.getElementById("nome").value;
 
     const email =
         document.getElementById("email").value;
 
-    const password =
+    const senha =
         document.getElementById("senha").value;
 
-    try {
+    try{
 
-        alert("Tentando fazer login...");
+        const userCredential =
+            await createUserWithEmailAndPassword(
+                auth,
+                email,
+                senha
+            );
 
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
+        await updateProfile(
+            userCredential.user,
+            {
+                displayName:nome
+            }
         );
 
-        alert("Login realizado com sucesso!");
+        alert("Conta criada com sucesso!");
 
-        // Página que abre após o login
-        window.location.href = "index.html";
+        window.location.href="login.html";
 
-    } catch (error) {
+    }catch(error){
 
-        if (error.code === "auth/invalid-credential") {
-
-            alert("Email ou senha incorretos.");
-
-        } else if (error.code === "auth/user-not-found") {
-
-            alert("Utilizador não encontrado.");
-
-        } else if (error.code === "auth/wrong-password") {
-
-            alert("Senha incorreta.");
-
-        } else {
-
-            alert("Erro: " + error.message);
-
-        }
-
-        console.error(error);
+        alert(error.message);
 
     }
 
