@@ -242,7 +242,7 @@ async function procurarResposta(pergunta){
 
         {
             palavras:["cursos","imptel"],
-            resposta:"O IMPTEL disponibiliza cursos técnicos e profissionais. Para mais informações consulte a secretaria académica."
+            resposta:"O IMPTEL disponibiliza cursos técnicos e profissionais. Dentre eles temos os seguinte: Técnico Informática || Electrónica e Telelcomunicação."
         },
 
         {
@@ -252,22 +252,22 @@ async function procurarResposta(pergunta){
 
         {
             palavras:["matricula","imptel"],
-            resposta:"As matrículas no IMPTEL são realizadas durante os períodos definidos pela instituição."
+            resposta:"As matrículas no IMPTEL são realizadas durante os períodos definidos pela instituição.Normalmente as matrículas têm abertura  na Quinzena do mês de julho"
         },
 
         {
             palavras:["matrícula","imptel"],
-            resposta:"As matrículas no IMPTEL são realizadas durante os períodos definidos pela instituição."
+            resposta:"As matrículas no IMPTEL são realizadas durante os períodos definidos pela instituição.Normalmente as matrículas têm abertura  na Quinzena do mês de julho"
         },
 
         {
             palavras:["onde fica","imptel"],
-            resposta:"O IMPTEL localiza-se em Luanda, Angola."
+            resposta:"Primeiramente o Imptel está localizado em Angola(Luanda).Existindo dois, um locaizado no Camama(IMPTEL1) e outro em Viana(IMPTEL2) "
         },
 
         {
             palavras:["localização","imptel"],
-            resposta:"O IMPTEL localiza-se em Luanda, Angola."
+            resposta:"Primeiramente o Imptel está localizado em Angola(Luanda).Existindo dois, um locaizado no Camama(IMPTEL1) e outro em Viana(IMPTEL2)"
         },
 
         {
@@ -304,12 +304,19 @@ async function procurarResposta(pergunta){
             palavras:["olá"],
             resposta:"Olá 👋 Sou a IMPGPT, assistente virtual do IMPTEL. Como posso ajudar?"
         },
+        {
+            palavras:["criador"," imptel"],
+            resposta:"O criador do IMPTEL(Instituto Médio Técnico de Tecnologias), chama-se Mário Igreja, sendo o criador das duas instituições que temos."
+        },
+        
+        
+      
 
         {
             palavras:["ola"],
             resposta:"Olá 👋 Sou a IMPGPT, assistente virtual do IMPTEL. Como posso ajudar?"
         }
-
+        
     ];
 
     for(const item of respostas){
@@ -326,6 +333,10 @@ async function procurarResposta(pergunta){
     // Respostas genéricas
 
     if(userText.includes("imptel")){
+        return "O IMPTEL é uma instituição de ensino técnico dedicada à formação académica e profissional dos jovens angolanos.";
+    }
+
+    if( userText.includes("Criador")||userText.includes("imptel")){
         return "O IMPTEL é uma instituição de ensino técnico dedicada à formação académica e profissional dos jovens angolanos.";
     }
 
@@ -381,7 +392,7 @@ async function procurarResposta(pergunta){
 
     }catch(error){
 
-        return "Erro ao comunicar com a IA.";
+        return "Erro ao comunicar com a API.";
     }
 }
 
